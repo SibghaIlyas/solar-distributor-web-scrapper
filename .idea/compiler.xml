@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="solar-distributor-web-scrapper" target="16" />
+      <module name="solar-distributor-web-scrapper" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
