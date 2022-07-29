@@ -45,7 +45,7 @@ public class WebScrapper {
         driver.findElement(loginBtn).click();
     }
 
-    public void SolarDistributorWebScrapper() throws IOException, GeneralSecurityException, ParseException {
+    public void SolarDistributorWebScrapper() throws IOException, GeneralSecurityException {
 
         int googleStatusCode = 1;
         int rowNo = 2;
@@ -120,7 +120,5 @@ public class WebScrapper {
 
         }
     }
-
-
 
 }
