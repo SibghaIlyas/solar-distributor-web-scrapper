@@ -2,7 +2,7 @@ package webScrapper;
 
 import com.google.api.services.sheets.v4.model.ValueRange;
 import helpers.GoogleSheetHelpers;
-import org.json.simple.parser.ParseException;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -36,7 +36,8 @@ public class WebScrapper {
     public WebScrapper() throws IOException {
         System.setProperty("webdriver.chrome.driver", "chromedriver");
         options.addArguments("headless");
-        driver= new ChromeDriver(options);
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, 10);
     }
 
