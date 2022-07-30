@@ -7,6 +7,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -22,8 +23,9 @@ public class WebScrapper {
     private int totalRows = 0;
 
     private HashMap<String, String> data = new HashMap<String, String>();
-    private WebDriver driver = new ChromeDriver();
-    private WebDriverWait wait = new WebDriverWait(driver, 10);
+    ChromeOptions options = new ChromeOptions();
+    private WebDriver driver;
+    private WebDriverWait wait;
 
     By newAccount = By.xpath("//div[@class='pr-newNavbar__account']");
     By email = By.xpath("//input[@name='lgn_usr']");
@@ -32,7 +34,10 @@ public class WebScrapper {
     By acceptAllCookies = By.xpath("//a[contains(text(),'Allow all cookies')]");
 
     public WebScrapper() throws IOException {
-        System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "chromedriver");
+        options.addArguments("headless");
+        driver= new ChromeDriver(options);
+        wait = new WebDriverWait(driver, 10);
     }
 
     public void login() {
