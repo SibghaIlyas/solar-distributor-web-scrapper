@@ -34,7 +34,7 @@ public class WebScrapper {
     By acceptAllCookies = By.xpath("//a[contains(text(),'Allow all cookies')]");
 
     public WebScrapper() throws IOException {
-        System.setProperty("webdriver.chrome.driver", "chromedriver");
+        System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
         options.addArguments("headless");
 //        WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver(options);
