@@ -10,6 +10,15 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/testng-7.6.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Maven: org.apache.poi:poi-ooxml:3.11" level="project" />
     <orderEntry type="library" name="Maven: org.apache.poi:poi:3.11" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.9" level="project" />
@@ -71,6 +80,12 @@
     <orderEntry type="library" name="Maven: com.google.apis:google-api-services-sheets:v4-rev456-1.22.0" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
-    <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.surefire:surefire-testng:2.21.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.surefire:common-java5:2.21.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.surefire:surefire-testng-utils:2.21.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.surefire:surefire-grouper:2.21.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.surefire:surefire-api:2.21.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.maven.surefire:surefire-logger-api:2.21.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
   </component>
 </module>
