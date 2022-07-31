@@ -35,7 +35,7 @@ public class WebScrapper {
 
     public WebScrapper() throws IOException {
         System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
-//        options.addArguments("headless");
+        options.addArguments("headless");
 //        WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, 10);
