@@ -51,7 +51,7 @@ public class WebScrapper {
         driver.findElement(loginBtn).click();
     }
 
-    public void SolarDistributorWebScrapper() throws IOException, GeneralSecurityException {
+    public void SolarDistributorWebScrapper() throws IOException, GeneralSecurityException, InterruptedException {
 
         int googleStatusCode = 1;
         int rowNo = 2;
@@ -71,16 +71,18 @@ public class WebScrapper {
             String title = driver.findElement(By.xpath("(((//ul[@class='pr-newNavbar__menu-list'])[4]/li)/a/div[@class='pr-newNavbar__menu-link-middle pr-newNavbar__menu-title'])["+count+"]")).getText();
             System.out.println(title);
             data.put("Category", title);
+            Thread.sleep(10000);
             wait.until(ExpectedConditions.elementToBeClickable(categoryElement));
             categoryElement.click();
 
             //get product name
+            Thread.sleep(10000);
             List<WebElement> products = driver.findElements(By.xpath("//div[@data-id='main-products-content']/div"));
 
             int productCount = 1;
             while(productCount <= products.size()) {
                 try {
-
+                    Thread.sleep(10000);
                     wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#productList_1")));
                     String product = driver.findElement(By.cssSelector("#productList_" + productCount)).getText();
                     data.put("name", product);
