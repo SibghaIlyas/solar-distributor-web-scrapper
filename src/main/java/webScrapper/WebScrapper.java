@@ -34,6 +34,7 @@ public class WebScrapper {
         options.addArguments("headless");
         options.addArguments("--window-size=1920,1080");
         options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
         driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, 10);
     }
