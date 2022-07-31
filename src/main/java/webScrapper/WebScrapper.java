@@ -102,6 +102,7 @@ public class WebScrapper {
 
                     googleStatusCode = GoogleSheetHelpers.writeToSingleRange(data, rowNo);
                     if(googleStatusCode == 429) {
+                        System.out.println("Google threw 429 code. Waiting for 1 minute!");
                         Thread.sleep(60000);
                     }
                     productCount++;
