@@ -37,6 +37,7 @@ public class WebScrapper {
         System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
         options.addArguments("headless");
         options.addArguments("--window-size=1920,1080");
+        options.addArguments("--no-sandbox");
         driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, 10);
     }
