@@ -36,19 +36,22 @@ public class WebScrapper {
     public WebScrapper() throws IOException {
         System.setProperty("webdriver.chrome.driver", "/usr/bin/chromedriver");
         options.addArguments("headless");
-//        WebDriverManager.chromedriver().setup();
+        options.addArguments("--window-size=1920,1080");
         driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, 10);
     }
 
     public void login() {
         driver.get("https://solar-distribution.baywa-re.de/en/");
+        System.out.println("landed on website");
         wait.until(ExpectedConditions.elementToBeClickable(acceptAllCookies));
         driver.findElement(acceptAllCookies).click();
+        System.out.println("Accepted all cookies");
         driver.findElement(newAccount).click();
         driver.findElement(email).sendKeys("pm@ddv.gmbh");
         driver.findElement(password).sendKeys("!g67zeAq3zHUZdU");
         driver.findElement(loginBtn).click();
+        System.out.println("logged into the system");
     }
 
     public void SolarDistributorWebScrapper() throws IOException, GeneralSecurityException, InterruptedException {
@@ -71,18 +74,15 @@ public class WebScrapper {
             String title = driver.findElement(By.xpath("(((//ul[@class='pr-newNavbar__menu-list'])[4]/li)/a/div[@class='pr-newNavbar__menu-link-middle pr-newNavbar__menu-title'])["+count+"]")).getText();
             System.out.println(title);
             data.put("Category", title);
-            Thread.sleep(100000);
             wait.until(ExpectedConditions.elementToBeClickable(categoryElement));
             categoryElement.click();
 
             //get product name
-            Thread.sleep(10000);
             List<WebElement> products = driver.findElements(By.xpath("//div[@data-id='main-products-content']/div"));
 
             int productCount = 1;
             while(productCount <= products.size()) {
                 try {
-                    Thread.sleep(10000);
                     wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#productList_1")));
                     String product = driver.findElement(By.cssSelector("#productList_" + productCount)).getText();
                     data.put("name", product);
