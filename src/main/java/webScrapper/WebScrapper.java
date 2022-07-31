@@ -17,11 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class WebScrapper {
-
-    private String fetchedPrice = null;
     private String range = "Product_Data!A1:E1000";
-    private int totalRows = 0;
-
     private HashMap<String, String> data = new HashMap<String, String>();
     ChromeOptions options = new ChromeOptions();
     private WebDriver driver;
@@ -87,8 +83,15 @@ public class WebScrapper {
                     wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#productList_1")));
                     String product = driver.findElement(By.cssSelector("#productList_" + productCount)).getText();
                     data.put("name", product);
-                    String price = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/following-sibling::div[@class='pr-productTiles__detail-price']/div")).getText();
-                    data.put("price", price);
+                    try {
+                        String price = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/following-sibling::div[@class='pr-productTiles__detail-price']/div")).getText();
+                        data.put("price", price);
+                    }
+                    catch (Exception priceEx) {
+                        String priceOnRequest = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/following-sibling::div[@class='pr-productTiles__detail-price']/a")).getText();
+                        data.put("price", priceOnRequest);
+                    }
+
                     String articleNo = driver.findElement(By.xpath("//div[@id='productList_"+ productCount +"']/following-sibling::div[@class='pr-productTiles__detail-articlenr']")).getText();
                     data.put("articleNo", articleNo);
                     String URL = driver.findElement(By.xpath("//div[@id='productList_"+ productCount +"']/../preceding-sibling::a")).getAttribute("href");
@@ -104,11 +107,11 @@ public class WebScrapper {
                     rowNo++;
 
                 } catch (Exception e) {
+                    System.out.println("e:" +  e);
                     try {
                         String status = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/following-sibling::div[@class='pr-productTiles__info-red']")).getText();
                         data.put("status", status);
                         GoogleSheetHelpers.writeToSingleRange(data, rowNo);
-                        System.out.println("e:" +  e);
                         productCount++;
                         rowNo++;
                     }
