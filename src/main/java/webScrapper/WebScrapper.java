@@ -71,7 +71,7 @@ public class WebScrapper {
             String title = driver.findElement(By.xpath("(((//ul[@class='pr-newNavbar__menu-list'])[4]/li)/a/div[@class='pr-newNavbar__menu-link-middle pr-newNavbar__menu-title'])["+count+"]")).getText();
             System.out.println(title);
             data.put("Category", title);
-            Thread.sleep(10000);
+            Thread.sleep(100000);
             wait.until(ExpectedConditions.elementToBeClickable(categoryElement));
             categoryElement.click();
 
