@@ -134,6 +134,7 @@ public class WebScrapper {
 
         }
         driver.quit();
+        System.out.println("Driver has been quit.");
     }
 
 }
