@@ -133,6 +133,7 @@ public class WebScrapper {
             count++;
 
         }
+        driver.quit();
     }
 
 }
