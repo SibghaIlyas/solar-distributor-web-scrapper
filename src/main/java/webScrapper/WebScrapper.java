@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class WebScrapper {
-    private String range = "Product_Data!A1:E1000";
+    private String range = "Product_Data!A1:E2000";
     private HashMap<String, String> data = new HashMap<String, String>();
     ChromeOptions options = new ChromeOptions();
     private WebDriver driver;
@@ -76,16 +76,17 @@ public class WebScrapper {
             categoryElement.click();
 
             //get pagination count
-            int pagesCount = 1;
+            int pagesCount = 1; int pagesSize = 1;
             List<WebElement> pages = null;
             try {
                 pages = driver.findElements(By.xpath("//a[contains(@class, 'pr-paginationRedesign__pageLink')]"));
-                System.out.println("This category has "+pages.size() +" pages of products.");
+                pagesSize = Integer.parseInt(pages.get(pages.size() - 1).getText());
+                System.out.println("This category has "+pagesSize +" pages of products.");
             } catch (Exception e) {
                 System.out.println("This category has only one page of products.");
             }
 
-            while( pagesCount <= (pages.size()) || pagesCount == 1) {
+            while( pagesCount <= pagesSize) {
                 //get product name
                 List<WebElement> products = driver.findElements(By.xpath("//div[@data-id='main-products-content']/div"));
                 int productCount = 1;
@@ -114,6 +115,7 @@ public class WebScrapper {
                         if (googleStatusCode == 429) {
                             System.out.println("Google threw 429 code. Waiting for 1 minute!");
                             Thread.sleep(60000);
+                            GoogleSheetHelpers.writeToSingleRange(data, rowNo);
                         }
                         productCount++;
                         rowNo++;
@@ -140,15 +142,16 @@ public class WebScrapper {
                 }
                 pagesCount++;
                 try {
-                    driver.findElement(By.xpath("//a[contains(@class, 'pr-paginationRedesign__pageLink') and contains(text(),'"+pagesCount+"')]"));
-                    System.out.println("landing on page" + pagesCount);
+                    if(pagesSize > 1 && pagesCount <= pagesSize) {
+                        driver.findElement(By.className("pr-paginationRedesign__control-next")).click();
+                        System.out.println("landing on page" + pagesCount);
+                    }
+
                 } catch (Exception e) {
                     System.out.println("No other pages to scrap.");
                 }
 
             }
-
-
 
             data.clear();
             count++;
