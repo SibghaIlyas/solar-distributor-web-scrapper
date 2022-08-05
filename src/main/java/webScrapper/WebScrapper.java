@@ -52,7 +52,7 @@ public class WebScrapper {
         System.out.println("logged into the system");
     }
 
-    public void SolarDistributorWebScrapper() throws IOException, GeneralSecurityException, InterruptedException {
+    public void SolarDistributorWebScrapper() throws IOException, GeneralSecurityException {
 
         int googleStatusCode = 1;
         int rowNo = 2;
@@ -75,59 +75,80 @@ public class WebScrapper {
             wait.until(ExpectedConditions.elementToBeClickable(categoryElement));
             categoryElement.click();
 
-            //get product name
-            List<WebElement> products = driver.findElements(By.xpath("//div[@data-id='main-products-content']/div"));
-
-            int productCount = 1;
-            while(productCount <= products.size()) {
-                try {
-                    wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#productList_1")));
-                    String product = driver.findElement(By.cssSelector("#productList_" + productCount)).getText();
-                    data.put("name", product);
-                    try {
-                        String price = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/following-sibling::div[@class='pr-productTiles__detail-price']/div")).getText();
-                        data.put("price", price);
-                    }
-                    catch (Exception priceEx) {
-                        String priceOnRequest = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/following-sibling::div[@class='pr-productTiles__detail-price']/a")).getText();
-                        data.put("price", priceOnRequest);
-                    }
-
-                    String articleNo = driver.findElement(By.xpath("//div[@id='productList_"+ productCount +"']/following-sibling::div[@class='pr-productTiles__detail-articlenr']")).getText();
-                    data.put("articleNo", articleNo);
-                    String URL = driver.findElement(By.xpath("//div[@id='productList_"+ productCount +"']/../preceding-sibling::a")).getAttribute("href");
-                    data.put("URL", URL);
-                    String status = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/following-sibling::div[@class='pr-productTiles__detail-availability']")).getText();
-                    data.put("status", status);
-
-                    googleStatusCode = GoogleSheetHelpers.writeToSingleRange(data, rowNo);
-                    if(googleStatusCode == 429) {
-                        System.out.println("Google threw 429 code. Waiting for 1 minute!");
-                        Thread.sleep(60000);
-                    }
-                    productCount++;
-                    rowNo++;
-
-                } catch (Exception e) {
-                    System.out.println("e:" +  e);
-                    try {
-                        String status = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/following-sibling::div[@class='pr-productTiles__info-red']")).getText();
-                        data.put("status", status);
-                        GoogleSheetHelpers.writeToSingleRange(data, rowNo);
-                        productCount++;
-                        rowNo++;
-                    }
-                    catch (Exception e1) {
-                        data.put("name", "Product could not  be found");
-                        data.put("price", "Product could not  be found");
-                        data.put("status", "Product could not  be found");
-                        System.out.println("e1:" +  e1);
-                        GoogleSheetHelpers.writeToSingleRange(data, rowNo);
-                        productCount++;
-                        rowNo++;
-                    }
-                }
+            //get pagination count
+            int pagesCount = 1;
+            List<WebElement> pages = null;
+            try {
+                pages = driver.findElements(By.xpath("//a[contains(@class, 'pr-paginationRedesign__pageLink')]"));
+                System.out.println("This category has "+pages.size() +" pages of products.");
+            } catch (Exception e) {
+                System.out.println("This category has only one page of products.");
             }
+
+            while( pagesCount <= (pages.size()) || pagesCount == 1) {
+                //get product name
+                List<WebElement> products = driver.findElements(By.xpath("//div[@data-id='main-products-content']/div"));
+                int productCount = 1;
+
+                while (productCount <= products.size()) {
+                    try {
+                        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#productList_1")));
+                        String product = driver.findElement(By.cssSelector("#productList_" + productCount)).getText();
+                        data.put("name", product);
+                        try {
+                            String price = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/following-sibling::div[@class='pr-productTiles__detail-price']/div")).getText();
+                            data.put("price", price);
+                        } catch (Exception priceEx) {
+                            String priceOnRequest = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/following-sibling::div[@class='pr-productTiles__detail-price']/a")).getText();
+                            data.put("price", priceOnRequest);
+                        }
+
+                        String articleNo = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/following-sibling::div[@class='pr-productTiles__detail-articlenr']")).getText();
+                        data.put("articleNo", articleNo);
+                        String URL = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/../preceding-sibling::a")).getAttribute("href");
+                        data.put("URL", URL);
+                        String status = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/following-sibling::div[@class='pr-productTiles__detail-availability']")).getText();
+                        data.put("status", status);
+
+                        googleStatusCode = GoogleSheetHelpers.writeToSingleRange(data, rowNo);
+                        if (googleStatusCode == 429) {
+                            System.out.println("Google threw 429 code. Waiting for 1 minute!");
+                            Thread.sleep(60000);
+                        }
+                        productCount++;
+                        rowNo++;
+
+                    } catch (Exception e) {
+                        System.out.println("e:" + e);
+                        try {
+                            String status = driver.findElement(By.xpath("//div[@id='productList_" + productCount + "']/following-sibling::div[@class='pr-productTiles__info-red']")).getText();
+                            data.put("status", status);
+                            GoogleSheetHelpers.writeToSingleRange(data, rowNo);
+                            productCount++;
+                            rowNo++;
+                        } catch (Exception e1) {
+                            data.put("name", "Product could not  be found");
+                            data.put("price", "Product could not  be found");
+                            data.put("status", "Product could not  be found");
+                            System.out.println("e1:" + e1);
+                            GoogleSheetHelpers.writeToSingleRange(data, rowNo);
+                            productCount++;
+                            rowNo++;
+                        }
+                    }
+
+                }
+                pagesCount++;
+                try {
+                    driver.findElement(By.xpath("//a[contains(@class, 'pr-paginationRedesign__pageLink') and contains(text(),'"+pagesCount+"')]"));
+                    System.out.println("landing on page" + pagesCount);
+                } catch (Exception e) {
+                    System.out.println("No other pages to scrap.");
+                }
+
+            }
+
+
 
             data.clear();
             count++;
